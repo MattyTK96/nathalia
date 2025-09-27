@@ -2,272 +2,533 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nathalia Valentina Mansito Flores</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            min-height: 100vh;
-            background: #000;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-            color: white;
+            padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
             text-align: center;
             position: relative;
+            overflow: hidden;
         }
 
-        canvas {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            margin: 20px;
-        }
-
-        .message {
-            font-size: 3em;
-            color: #ff4d6d;
-            opacity: 0;
-            transition: opacity 2s;
-            text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d;
-            margin-top: 20px;
-        }
-
-        .equation {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #0f0;
-            opacity: 0.7;
-        }
-
-        .hearts-background {
+        .hearts-bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: -1;
+            z-index: 0;
         }
 
-        .heart-bg {
+        .heart {
             position: absolute;
             font-size: 20px;
-            opacity: 0;
-            animation: float 5s linear infinite;
-            color: #ff4d6d;
+            color: rgba(255, 105, 180, 0.3);
+            animation: float 6s ease-in-out infinite;
         }
 
         @keyframes float {
-            to {
-                top: -100px;
-                opacity: 1;
-            }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        h1 {
+            color: #e84393;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            color: #fd79a8;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            background-color: rgba(252, 228, 236, 0.7);
+            padding: 15px;
+            border-radius: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #e84393;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fd79a8;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            height: 150px;
+            background-color: #fd79a8;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+            font-size: 2rem;
+        }
+
+        .card-back {
+            background-color: white;
+            transform: rotateY(180deg);
+            overflow: hidden;
+        }
+
+        .card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .controls {
-            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         button {
-            background: #ff4d6d;
-            color: white;
+            padding: 12px 25px;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
-            margin: 5px;
-            font-size: 16px;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         button:hover {
-            background: #ff3357;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s;
+        }
+
+        .message.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .message-content {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            transition: transform 0.5s;
+        }
+
+        .message.active .message-content {
+            transform: scale(1);
+        }
+
+        .message h2 {
+            color: #e84393;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .message p {
+            color: #636e72;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        @media (max-width: 768px) {
+            .game-board {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .card {
+                height: 120px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .card {
+                height: 100px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="hearts-background" id="heartsBg"></div>
-    <div class="equation" id="equation">x = 16sin³(t)<br>y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)</div>
-    
     <div class="container">
-        <canvas id="heartCanvas" width="400" height="400"></canvas>
-        <div class="message" id="message">Te Amo 💖</div>
+        <div class="hearts-bg" id="heartsBg"></div>
+        
+        <h1>LA CHICA MÁS PRECIOSA DEL MUNDO</h1>
+        <p class="subtitle">Encuentra las parejas de nuestros recuerdos más especiales</p>
+        
+        <div class="game-info">
+            <div class="info-item">
+                <span class="info-label">Movimientos</span>
+                <span class="info-value" id="moves">0</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Parejas Encontradas</span>
+                <span class="info-value" id="pairs">0/8</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Tiempo</span>
+                <span class="info-value" id="timer">00:00</span>
+            </div>
+        </div>
+        
+        <div class="game-board" id="gameBoard"></div>
         
         <div class="controls">
-            <button onclick="restartAnimation()">Repetir Animación</button>
-            <button onclick="toggleEquation()">Mostrar/Esconder Ecuación</button>
+            <button id="startBtn">Comenzar Juego</button>
+            <button id="resetBtn">Reiniciar</button>
+        </div>
+    </div>
+    
+    <div class="message" id="message">
+        <div class="message-content">
+            <h2>¡Felicidades, Mi Amor!</h2>
+            <p>Has encontrado todos nuestros recuerdos especiales. Cada uno de estos momentos ha sido increíble a tu lado, y espero que podamos crear muchos más juntos.</p>
+            <p>Eres la persona más especial en mi vida y te amo más de lo que las palabras pueden expresar.</p>
+            <button id="closeMessage">Cerrar</button>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('heartCanvas');
-        const ctx = canvas.getContext('2d');
-        const message = document.getElementById('message');
-        const heartsBg = document.getElementById('heartsBg');
-        const equation = document.getElementById('equation');
-
-        let animationId;
-        let t = 0;
-        let points = [];
-        const speed = 0.05;
-        let isDrawing = true;
-
-        // Función para dibujar el corazón usando ecuaciones paramétricas
-        function heartX(t) {
-            return 16 * Math.pow(Math.sin(t), 3);
-        }
-
-        function heartY(t) {
-            return 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-        }
-
-        function drawHeart() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const gameBoard = document.getElementById('gameBoard');
+            const movesDisplay = document.getElementById('moves');
+            const pairsDisplay = document.getElementById('pairs');
+            const timerDisplay = document.getElementById('timer');
+            const startBtn = document.getElementById('startBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const message = document.getElementById('message');
+            const closeMessage = document.getElementById('closeMessage');
+            const heartsBg = document.getElementById('heartsBg');
             
-            // Dibujar ejes coordenados
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-            ctx.beginPath();
-            ctx.moveTo(0, canvas.height/2);
-            ctx.lineTo(canvas.width, canvas.height/2);
-            ctx.moveTo(canvas.width/2, 0);
-            ctx.lineTo(canvas.width/2, canvas.height);
-            ctx.stroke();
-
-            // Configuración para dibujar el corazón
-            ctx.strokeStyle = '#ff4d6d';
-            ctx.fillStyle = 'rgba(255, 77, 109, 0.1)';
-            ctx.lineWidth = 2;
-
-            if (isDrawing) {
-                // Calcular nuevo punto
-                const x = heartX(t);
-                const y = heartY(t);
-                
-                // Escalar y centrar en el canvas
-                const scale = 8;
-                const canvasX = canvas.width/2 + x * scale;
-                const canvasY = canvas.height/2 - y * scale;
-                
-                points.push({x: canvasX, y: canvasY});
-
-                // Dibujar todos los puntos conectados
-                if (points.length > 1) {
-                    ctx.beginPath();
-                    ctx.moveTo(points[0].x, points[0].y);
-                    
-                    for (let i = 1; i < points.length; i++) {
-                        ctx.lineTo(points[i].x, points[i].y);
-                    }
-                    ctx.stroke();
+            // Variables del juego
+            let cards = [];
+            let flippedCards = [];
+            let moves = 0;
+            let pairsFound = 0;
+            let totalPairs = 8;
+            let gameStarted = false;
+            let timerInterval;
+            let seconds = 0;
+            
+            // Imágenes para las cartas (reemplaza estas URLs con tus propias fotos)
+            const imageUrls = [
+                '../pic_1.jpg',
+                'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
+            ];
+            
+            // Crear corazones de fondo
+            function createHearts() {
+                for (let i = 0; i < 30; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '❤';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 5 + 's';
+                    heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                    heartsBg.appendChild(heart);
                 }
-
-                // Dibujar el punto actual
-                ctx.fillStyle = '#ff4d6d';
-                ctx.beginPath();
-                ctx.arc(canvasX, canvasY, 3, 0, Math.PI * 2);
-                ctx.fill();
-
-                t += speed;
-
-                // Cuando completamos el corazón (2π radianes)
-                if (t > Math.PI * 2) {
-                    isDrawing = false;
+            }
+            
+            // Inicializar el juego
+            function initGame() {
+                gameBoard.innerHTML = '';
+                cards = [];
+                flippedCards = [];
+                moves = 0;
+                pairsFound = 0;
+                seconds = 0;
+                movesDisplay.textContent = moves;
+                pairsDisplay.textContent = `${pairsFound}/${totalPairs}`;
+                timerDisplay.textContent = '00:00';
+                
+                // Crear pares de cartas
+                const cardValues = [];
+                for (let i = 0; i < totalPairs; i++) {
+                    cardValues.push(i);
+                    cardValues.push(i);
+                }
+                
+                // Barajar las cartas
+                shuffleArray(cardValues);
+                
+                // Crear las cartas en el tablero
+                cardValues.forEach((value, index) => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.dataset.value = value;
                     
-                    // Rellenar el corazón
-                    ctx.fillStyle = 'rgba(255, 77, 109, 0.3)';
-                    ctx.beginPath();
-                    ctx.moveTo(points[0].x, points[0].y);
-                    for (let i = 1; i < points.length; i++) {
-                        ctx.lineTo(points[i].x, points[i].y);
+                    const cardFront = document.createElement('div');
+                    cardFront.classList.add('card-front');
+                    cardFront.innerHTML = '?';
+                    
+                    const cardBack = document.createElement('div');
+                    cardBack.classList.add('card-back');
+                    
+                    const img = document.createElement('img');
+                    img.src = imageUrls[value];
+                    img.alt = `Imagen ${value + 1}`;
+                    cardBack.appendChild(img);
+                    
+                    card.appendChild(cardFront);
+                    card.appendChild(cardBack);
+                    
+                    card.addEventListener('click', () => flipCard(card));
+                    gameBoard.appendChild(card);
+                    cards.push(card);
+                });
+                
+                gameStarted = false;
+                clearInterval(timerInterval);
+            }
+            
+            // Barajar array (algoritmo Fisher-Yates)
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+            
+            // Voltear una carta
+            function flipCard(card) {
+                if (!gameStarted) {
+                    startGame();
+                }
+                
+                if (flippedCards.length < 2 && !card.classList.contains('flipped') && !card.classList.contains('matched')) {
+                    card.classList.add('flipped');
+                    flippedCards.push(card);
+                    
+                    if (flippedCards.length === 2) {
+                        moves++;
+                        movesDisplay.textContent = moves;
+                        checkForMatch();
                     }
-                    ctx.fill();
-
-                    // Mostrar mensaje
-                    setTimeout(() => {
-                        message.style.opacity = 1;
-                        createHeartsStorm();
-                    }, 500);
+                }
+            }
+            
+            // Comprobar si las cartas volteadas son pareja
+            function checkForMatch() {
+                const [card1, card2] = flippedCards;
+                const isMatch = card1.dataset.value === card2.dataset.value;
+                
+                if (isMatch) {
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    flippedCards = [];
+                    pairsFound++;
+                    pairsDisplay.textContent = `${pairsFound}/${totalPairs}`;
+                    
+                    if (pairsFound === totalPairs) {
+                        endGame();
+                    }
                 } else {
-                    animationId = requestAnimationFrame(drawHeart);
+                    setTimeout(() => {
+                        card1.classList.remove('flipped');
+                        card2.classList.remove('flipped');
+                        flippedCards = [];
+                    }, 1000);
                 }
             }
-        }
-
-        function createFloatingHeart() {
-            const heartBg = document.createElement('div');
-            heartBg.innerHTML = '💖';
-            heartBg.classList.add('heart-bg');
-            heartBg.style.left = Math.random() * 100 + 'vw';
-            heartBg.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            heartBg.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heartsBg.appendChild(heartBg);
             
-            setTimeout(() => {
-                heartBg.remove();
-            }, 5000);
-        }
-
-        function createHeartsStorm() {
-            for(let i = 0; i < 20; i++) {
-                setTimeout(createFloatingHeart, i * 100);
+            // Iniciar el juego
+            function startGame() {
+                gameStarted = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                }, 1000);
             }
-        }
-
-        function restartAnimation() {
-            cancelAnimationFrame(animationId);
-            t = 0;
-            points = [];
-            isDrawing = true;
-            message.style.opacity = 0;
-            setTimeout(drawHeart, 500);
-        }
-
-        function toggleEquation() {
-            equation.style.display = equation.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // Efecto interactivo al hacer clic en el canvas
-        canvas.addEventListener('click', function() {
-            createHeartsStorm();
             
-            // Efecto de pulso en el corazón
-            ctx.fillStyle = 'rgba(255, 77, 109, 0.5)';
-            ctx.beginPath();
-            ctx.moveTo(points[0].x, points[0].y);
-            for (let i = 1; i < points.length; i++) {
-                ctx.lineTo(points[i].x, points[i].y);
+            // Finalizar el juego
+            function endGame() {
+                clearInterval(timerInterval);
+                createConfetti();
+                setTimeout(() => {
+                    message.classList.add('active');
+                }, 1000);
             }
-            ctx.fill();
             
-            setTimeout(() => {
-                ctx.fillStyle = 'rgba(255, 77, 109, 0.3)';
-                ctx.beginPath();
-                ctx.moveTo(points[0].x, points[0].y);
-                for (let i = 1; i < points.length; i++) {
-                    ctx.lineTo(points[i].x, points[i].y);
+            // Crear efecto de confeti
+            function createConfetti() {
+                const colors = ['#e84393', '#fd79a8', '#ff9a9e', '#fad0c4', '#a29bfe', '#74b9ff'];
+                
+                for (let i = 0; i < 150; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.opacity = '1';
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Animación del confeti
+                    const animation = confetti.animate([
+                        { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                        { transform: `translateY(100vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: Math.random() * 3000 + 2000,
+                        easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                    });
+                    
+                    animation.onfinish = () => {
+                        confetti.remove();
+                    };
                 }
-                ctx.fill();
-            }, 300);
+            }
+            
+            // Event listeners
+            startBtn.addEventListener('click', initGame);
+            resetBtn.addEventListener('click', initGame);
+            closeMessage.addEventListener('click', () => {
+                message.classList.remove('active');
+            });
+            
+            // Inicializar el juego al cargar la página
+            createHearts();
+            initGame();
         });
-
-        // Iniciar la animación
-        drawHeart();
-
-        // Crear algunos corazones de fondo iniciales
-        for(let i = 0; i < 3; i++) {
-            setTimeout(createFloatingHeart, i * 1000);
-        }
     </script>
 </body>
 </html>
-
