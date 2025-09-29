@@ -106,9 +106,11 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 50px; /* Aumentado de 30px a 50px */
             position: relative;
             z-index: 1;
+            max-width: 650px;
+            margin: 0 auto;
         }
 
         .card {
@@ -123,7 +125,7 @@
             transition: transform 0.5s;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             position: relative;
-            aspect-ratio: 3/4; /* Proporción fija para las cartas */
+            aspect-ratio: 3/4;
         }
 
         .card.flipped {
@@ -156,7 +158,7 @@
         .card-back img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Cambiado a cover para mejor visualización */
+            object-fit: cover;
         }
 
         .controls {
@@ -165,6 +167,7 @@
             gap: 20px;
             position: relative;
             z-index: 1;
+            margin-top: 20px; /* Añadido margen superior */
         }
 
         button {
@@ -253,11 +256,13 @@
             .game-board {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 10px;
+                max-width: 500px;
+                margin-bottom: 40px; /* Ajustado para tablets */
             }
             
             .card {
-                height: 150px; /* Altura más apropiada para móviles */
-                aspect-ratio: 3/4; /* Mantener proporción */
+                height: 150px;
+                aspect-ratio: 3/4;
             }
             
             h1 {
@@ -280,16 +285,22 @@
             .container {
                 padding: 20px;
             }
+            
+            .controls {
+                margin-top: 15px; /* Ajustado para tablets */
+            }
         }
 
         @media (max-width: 480px) {
             .game-board {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
+                max-width: 320px;
+                margin-bottom: 35px; /* Ajustado para móviles */
             }
             
             .card {
-                height: 130px; /* Altura optimizada para pantallas pequeñas */
+                height: 130px;
             }
             
             .container {
@@ -309,6 +320,7 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 10px;
+                margin-top: 15px; /* Ajustado para móviles */
             }
             
             button {
@@ -322,8 +334,8 @@
     <div class="container">
         <div class="hearts-bg" id="heartsBg"></div>
         
-        <h1>LA CHICA MÁS PRECIOSA DEL MUNDO</h1>
-        <p class="subtitle">Encuentra las parejas de nuestros recuerdos más especiales</p>
+        <h1>Nathalia Valentina</h1>
+        <p class="subtitle">...la chica más perfecta del universo...</p>
         
         <div class="game-info">
             <div class="info-item">
@@ -351,8 +363,8 @@
     <div class="message" id="message">
         <div class="message-content">
             <h2>¡Felicidades, Mi Amor!</h2>
-            <p>Has encontrado todos nuestros recuerdos especiales. Cada uno de estos momentos ha sido increíble a tu lado, y espero que podamos crear muchos más juntos.</p>
-            <p>Eres la persona más especial en mi vida y te amo más de lo que las palabras pueden expresar.</p>
+            <p>Cada imagen que viste refleja lo maravillosa que eres. Cada foto tuya me recuerda lo afortunado que soy de tenerte a mi lado</p>
+            <p>Gracias por ser tú, con tu sonrisa, tu mirada y todo lo que te hace especial. Te amo más de lo que las palabras pueden expresar 💖.</p>
             <button id="closeMessage">Cerrar</button>
         </div>
     </div>
