@@ -106,11 +106,12 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            margin-bottom: 50px; /* Aumentado de 30px a 50px */
+            margin-bottom: 50px;
             position: relative;
             z-index: 1;
             max-width: 650px;
             margin: 0 auto;
+            width: 100%; /* Añadido para asegurar que ocupe el ancho disponible */
         }
 
         .card {
@@ -167,7 +168,7 @@
             gap: 20px;
             position: relative;
             z-index: 1;
-            margin-top: 20px; /* Añadido margen superior */
+            margin-top: 20px;
         }
 
         button {
@@ -257,7 +258,8 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 10px;
                 max-width: 500px;
-                margin-bottom: 40px; /* Ajustado para tablets */
+                margin-bottom: 40px;
+                width: 100%; /* Añadido para móviles */
             }
             
             .card {
@@ -287,24 +289,28 @@
             }
             
             .controls {
-                margin-top: 15px; /* Ajustado para tablets */
+                margin-top: 15px;
             }
         }
 
         @media (max-width: 480px) {
             .game-board {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-                max-width: 320px;
-                margin-bottom: 35px; /* Ajustado para móviles */
+                gap: 12px; /* Aumentado para mejor separación */
+                max-width: 100%; /* Cambiado a 100% para ocupar todo el ancho */
+                margin-bottom: 35px;
+                width: 100%;
+                padding: 0 10px; /* Añadido padding para no tocar los bordes */
             }
             
             .card {
-                height: 130px;
+                height: 140px; /* Ajustado para mejor proporción */
+                max-width: 160px; /* Limitar el tamaño máximo */
+                margin: 0 auto; /* Centrar cada carta individualmente */
             }
             
             .container {
-                padding: 15px;
+                padding: 15px 10px; /* Reducido padding lateral en móvil */
             }
             
             h1 {
@@ -320,12 +326,24 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 10px;
-                margin-top: 15px; /* Ajustado para móviles */
+                margin-top: 15px;
             }
             
             button {
                 width: 100%;
                 max-width: 200px;
+            }
+        }
+
+        /* Media Query adicional para pantallas muy pequeñas */
+        @media (max-width: 360px) {
+            .card {
+                height: 120px;
+                max-width: 140px;
+            }
+            
+            .game-board {
+                gap: 8px;
             }
         }
     </style>
